@@ -15,7 +15,15 @@
   .container { max-width: 1140px; margin: 0 auto; padding: 0 15px; }
 
   /* ========== 顶栏 ========== */
-  .site-header { height: 64px; background: #fff; }
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 60;
+    height: 64px;
+    background: #fff;
+    transition: box-shadow 0.2s;
+  }
+  .site-header.scrolled { box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08); }
   .header-inner { height: 64px; display: flex; align-items: center; }
   .logo { display: flex; align-items: center; gap: 1px; text-decoration: none; }
   .logo-text {
@@ -31,11 +39,24 @@
   .logo-text .logo-partner { color: #A80063; font-weight: 700; font-style: italic; }
   .logo-text sup { font-size: 9px; color: #A80063; }
   .nav { display: flex; gap: 30px; margin-left: 32px; }
-  .nav a { font-size: 15px; color: #555; text-decoration: none; }
-  .nav a:hover { color: #A80063; }
+  .nav a { font-size: 15px; color: #555; text-decoration: none; transition: color 0.2s; }
+  .nav a:hover, .nav a.active { color: #A80063; }
   .header-right { margin-left: auto; margin-right: 37px; display: flex; align-items: center; gap: 34px; font-size: 15px; color: #555; }
-  .header-right a { color: #555; text-decoration: none; }
+  .header-right a { color: #555; text-decoration: none; transition: color 0.2s; }
   .header-right a:hover { color: #A80063; }
+
+  /* ========== 视图切换 ========== */
+  .view { display: none; }
+  .view.active { display: block; animation: viewIn 0.42s cubic-bezier(0.22, 0.61, 0.36, 1) both; }
+  .view.leaving { display: block; animation: viewOut 0.26s ease both; }
+  @keyframes viewIn {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes viewOut {
+    from { opacity: 1; transform: translateY(0); }
+    to   { opacity: 0; transform: translateY(-14px); }
+  }
 
   /* ========== 英雄区 ========== */
   .hero {
@@ -69,10 +90,14 @@
     padding: 10px 16px;
     font-size: 17px;
     line-height: 1.42;
+    font-family: inherit;
     color: #fff;
     background: #5CB85C;
+    border: none;
     border-radius: 6px;
     text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s;
   }
   .btn-login:hover { background: #4CAE4C; }
 
@@ -84,12 +109,132 @@
   .feature h3 { font-size: 23px; font-weight: 400; color: #666; margin-bottom: 7px; }
   .feature p { font-size: 13.5px; color: #777; line-height: 1.48; }
 
+  /* ========== 子页面通用 ========== */
+  .page-head { background: #f5f6f7; padding: 42px 20px 38px; text-align: center; }
+  .page-head h2 { font-size: 26px; font-weight: 400; color: #333; }
+  .page-head p { margin-top: 10px; font-size: 14px; color: #888; }
+  .page-body { padding: 56px 0 88px; }
+
+  /* ========== 关于我们 ========== */
+  .about-intro {
+    max-width: 860px;
+    margin: 0 auto 52px;
+    font-size: 15px;
+    line-height: 2;
+    color: #666;
+    text-align: center;
+  }
+  .stat-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; margin-bottom: 56px; }
+  .stat { flex: 0 1 200px; text-align: center; }
+  .stat b { display: block; font-size: 34px; font-weight: 600; color: #009981; }
+  .stat span { display: block; margin-top: 6px; font-size: 13.5px; color: #888; }
+
+  /* ========== 卡片（关于/业务共用） ========== */
+  .card-grid { display: flex; flex-wrap: wrap; gap: 24px; }
+  .card {
+    flex: 1 1 300px;
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 30px 24px 26px;
+    text-align: center;
+    transition: box-shadow 0.25s, transform 0.25s;
+  }
+  .card:hover { box-shadow: 0 8px 22px rgba(0, 0, 0, 0.07); transform: translateY(-3px); }
+  .card .card-icon { height: 52px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; }
+  .card h4 { font-size: 18px; font-weight: 500; color: #444; margin-bottom: 10px; }
+  .card p { font-size: 13.5px; color: #777; line-height: 1.7; }
+
+  /* ========== 联系我们 ========== */
+  .contact-layout { display: flex; flex-wrap: wrap; gap: 44px; }
+  .contact-info { flex: 1 1 380px; list-style: none; }
+  .contact-info li {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 18px 0;
+    border-bottom: 1px dashed #eee;
+    font-size: 14.5px;
+    color: #555;
+    line-height: 1.6;
+  }
+  .contact-info li svg { flex: 0 0 auto; margin-top: 1px; }
+  .contact-info li em { display: block; font-style: normal; font-size: 13px; color: #999; margin-bottom: 3px; }
+  .contact-form { flex: 1 1 420px; background: #fafbfc; border: 1px solid #eee; border-radius: 8px; padding: 28px; }
+  .field { margin-bottom: 16px; }
+  .field label { display: block; font-size: 13.5px; color: #555; margin-bottom: 6px; }
+  .field input, .field textarea {
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 9px 12px;
+    font-size: 14px;
+    font-family: inherit;
+    color: #333;
+    outline: none;
+    transition: border-color 0.2s;
+    resize: vertical;
+  }
+  .field input:focus, .field textarea:focus { border-color: #009981; }
+
+  /* ========== 弹窗 ========== */
+  body.modal-open { overflow: hidden; }
+  .modal-mask {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.45);
+  }
+  .modal-mask.open { display: flex; animation: maskIn 0.25s ease both; }
+  .modal {
+    width: 360px;
+    max-width: calc(100vw - 40px);
+    background: #fff;
+    border-radius: 10px;
+    padding: 30px 28px 24px;
+    position: relative;
+    animation: modalIn 0.3s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  }
+  @keyframes maskIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes modalIn {
+    from { opacity: 0; transform: translateY(16px) scale(0.97); }
+    to   { opacity: 1; transform: none; }
+  }
+  .modal h3 { font-size: 20px; font-weight: 500; color: #333; text-align: center; margin-bottom: 20px; }
+  .modal-close {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    border: none;
+    background: none;
+    font-size: 26px;
+    line-height: 1;
+    color: #aaa;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .modal-close:hover { color: #666; }
+  .modal-submit { width: 100%; margin-top: 4px; }
+  .msg { min-height: 18px; margin-top: 10px; font-size: 13px; text-align: center; }
+  .msg.error { color: #D9534F; }
+  .msg.ok { color: #5CB85C; }
+
+  /* ========== 页脚 ========== */
+  .site-footer { border-top: 1px solid #eee; padding: 24px 0; text-align: center; font-size: 13px; color: #999; }
+
   /* ========== 窄屏适配 ========== */
   @media (max-width: 992px) {
     .nav { display: none; }
     .features .container { flex-wrap: wrap; }
     .feature { flex: 1 1 100%; margin-bottom: 48px; }
     .feature:last-child { margin-bottom: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .view.active, .view.leaving, .modal-mask.open, .modal { animation: none !important; }
+    .card { transition: none; }
   }
 </style>
 </head>
@@ -98,7 +243,7 @@
 <!-- 顶栏 -->
 <header class="site-header">
   <div class="container header-inner">
-    <a class="logo" href="#">
+    <a class="logo" href="#home">
       <!-- 拼图风标志 -->
       <svg width="47" height="46" viewBox="0 0 47 46" aria-hidden="true">
         <defs>
@@ -123,75 +268,395 @@
       <span class="logo-text"><b class="logo-pc">PC</b><i class="logo-partner">Partner</i><sup>&reg;</sup></span>
     </a>
     <nav class="nav">
-      <a href="#">主页</a>
-      <a href="#">关于我们</a>
-      <a href="#">主要业务</a>
-      <a href="#">联系我们</a>
+      <a href="#home"     data-view="home">主页</a>
+      <a href="#about"    data-view="about">关于我们</a>
+      <a href="#business" data-view="business">主要业务</a>
+      <a href="#contact"  data-view="contact">联系我们</a>
     </nav>
     <div class="header-right">
-      <span>电话:15698443151</span>
-      <a href="#">管理员登录</a>
+      <span>电话:188 7615 6701</span>
+      <a href="#" data-modal="admin">管理员登录</a>
     </div>
   </div>
 </header>
 
-<!-- 英雄区 -->
-<section class="hero">
-  <div class="hero-content">
-    <h1 class="hero-title">养老社区</h1>
-    <p class="hero-subtitle">我国已经进入老龄社会，随着中国同龄人步入老年，将出现第一次老年人口增长高峰。</p>
-    <a class="btn-login" href="#">用户登录</a>
-  </div>
-</section>
+<main>
+  <!-- ========== 主页 ========== -->
+  <section class="view active" id="view-home">
+    <div class="hero">
+      <div class="hero-content">
+        <h1 class="hero-title">养老社区</h1>
+        <p class="hero-subtitle">我国已经进入老龄社会，随着中国同龄人步入老年，将出现第一次老年人口增长高峰。</p>
+        <button class="btn-login" type="button" data-modal="user">用户登录</button>
+      </div>
+    </div>
+    <div class="features">
+      <div class="container">
+        <div class="feature">
+          <div class="icon-box">
+            <!-- 红：企字圆环 + 速度线 -->
+            <svg width="94" height="72" viewBox="0 0 94 72" fill="none" aria-hidden="true">
+              <circle cx="36" cy="36" r="33.5" stroke="#DA5B57" stroke-width="3.5"/>
+              <text x="36" y="37" font-size="44" font-weight="700" fill="#DA5B57" text-anchor="middle" dominant-baseline="central">企</text>
+              <line x1="55" y1="4"  x2="90" y2="4"  stroke="#DA5B57" stroke-width="3.5" stroke-linecap="round"/>
+              <line x1="62" y1="18" x2="90" y2="18" stroke="#DA5B57" stroke-width="3.5" stroke-linecap="round"/>
+              <line x1="56" y1="52" x2="88" y2="52" stroke="#DA5B57" stroke-width="3.5" stroke-linecap="round"/>
+              <line x1="64" y1="66" x2="88" y2="66" stroke="#DA5B57" stroke-width="3.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h3>丰富的经验积累</h3>
+          <p>团队拥有此类项目经验，且团队成员和指导老师皆有一定的能力水平</p>
+        </div>
+        <div class="feature">
+          <div class="icon-box">
+            <!-- 橙：三人剪影 -->
+            <svg width="94" height="88" viewBox="0 0 94 88" aria-hidden="true">
+              <circle cx="25" cy="14" r="14" fill="#EC971F"/>
+              <path d="M0.5,88 L0.5,60 Q0.5,38 24,38 Q47,38 47,60 L47,88 Z" fill="#EC971F"/>
+              <circle cx="69" cy="14" r="14" fill="#EC971F"/>
+              <path d="M93.5,88 L93.5,60 Q93.5,38 70,38 Q47,38 47,60 L47,88 Z" fill="#EC971F"/>
+              <circle cx="47" cy="30" r="19" fill="#EC971F" stroke="#fff" stroke-width="4"/>
+              <path d="M26,88 L26,73 Q26,53 47,53 Q68,53 68,73 L68,88 Z" fill="#EC971F" stroke="#fff" stroke-width="4"/>
+            </svg>
+          </div>
+          <h3>端到端服务</h3>
+          <p>本平台将融合物业、医院、护理、保险、养老、健康六个方面，打造六位一体的新型养老模式</p>
+        </div>
+        <div class="feature">
+          <div class="icon-box">
+            <!-- 蓝：柱状图 -->
+            <svg width="94" height="80" viewBox="0 0 94 80" aria-hidden="true">
+              <rect x="6"    y="41" width="17"   height="34" rx="3.5" fill="#5BC0DE"/>
+              <rect x="37"   y="0"  width="18.5" height="75" rx="3.5" fill="#5BC0DE"/>
+              <rect x="63.5" y="11" width="17.5" height="64" rx="3.5" fill="#5BC0DE"/>
+              <rect x="0"    y="74" width="90"   height="4.5" rx="2"  fill="#5BC0DE"/>
+            </svg>
+          </div>
+          <h3>迅速支援</h3>
+          <p>老年人居家养老，出现问题，系统可以快速反应链接对应平台</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<!-- 三栏特性区 -->
-<section class="features">
-  <div class="container">
-    <div class="feature">
-      <div class="icon-box">
-        <!-- 红：企字圆环 + 速度线 -->
-        <svg width="94" height="72" viewBox="0 0 94 72" fill="none" aria-hidden="true">
-          <circle cx="36" cy="36" r="33.5" stroke="#DA5B57" stroke-width="3.5"/>
-          <text x="36" y="37" font-size="44" font-weight="700" fill="#DA5B57" text-anchor="middle" dominant-baseline="central">企</text>
-          <line x1="55" y1="4"  x2="90" y2="4"  stroke="#DA5B57" stroke-width="3.5" stroke-linecap="round"/>
-          <line x1="62" y1="18" x2="90" y2="18" stroke="#DA5B57" stroke-width="3.5" stroke-linecap="round"/>
-          <line x1="56" y1="52" x2="88" y2="52" stroke="#DA5B57" stroke-width="3.5" stroke-linecap="round"/>
-          <line x1="64" y1="66" x2="88" y2="66" stroke="#DA5B57" stroke-width="3.5" stroke-linecap="round"/>
-        </svg>
-      </div>
-      <h3>丰富的经验积累</h3>
-      <p>团队拥有此类项目经验，且团队成员和指导老师皆有一定的能力水平</p>
+  <!-- ========== 关于我们 ========== -->
+  <section class="view" id="view-about">
+    <div class="page-head">
+      <h2>关于我们</h2>
+      <p>用心连接每一个家庭，让养老更有温度</p>
     </div>
-    <div class="feature">
-      <div class="icon-box">
-        <!-- 橙：三人剪影 -->
-        <svg width="94" height="88" viewBox="0 0 94 88" aria-hidden="true">
-          <circle cx="25" cy="14" r="14" fill="#EC971F"/>
-          <path d="M0.5,88 L0.5,60 Q0.5,38 24,38 Q47,38 47,60 L47,88 Z" fill="#EC971F"/>
-          <circle cx="69" cy="14" r="14" fill="#EC971F"/>
-          <path d="M93.5,88 L93.5,60 Q93.5,38 70,38 Q47,38 47,60 L47,88 Z" fill="#EC971F"/>
-          <circle cx="47" cy="30" r="19" fill="#EC971F" stroke="#fff" stroke-width="4"/>
-          <path d="M26,88 L26,73 Q26,53 47,53 Q68,53 68,73 L68,88 Z" fill="#EC971F" stroke="#fff" stroke-width="4"/>
-        </svg>
+    <div class="page-body">
+      <div class="container">
+        <p class="about-intro">
+          养老社区是面向中国老龄社会打造的一站式居家养老服务平台。我们联合物业、医院、护理、保险、养老、健康六大领域合作伙伴，
+          以"六位一体"的服务模式，为老年人提供专业、温暖、安全的居家养老体验，让子女放心、让长者安心。
+        </p>
+        <div class="stat-row">
+          <div class="stat"><b>10+</b><span>年行业经验</span></div>
+          <div class="stat"><b>6</b><span>大服务板块</span></div>
+          <div class="stat"><b>200+</b><span>合作机构</span></div>
+          <div class="stat"><b>98%</b><span>用户满意度</span></div>
+        </div>
+        <div class="card-grid">
+          <div class="card">
+            <h4>专业</h4>
+            <p>团队拥有此类项目经验，成员与指导老师均具备成熟的养老服务体系能力，服务流程标准化。</p>
+          </div>
+          <div class="card">
+            <h4>温暖</h4>
+            <p>从日常照料到情感陪伴，让老年人居家也能感受到社区的温度，不是亲人胜似亲人。</p>
+          </div>
+          <div class="card">
+            <h4>安全</h4>
+            <p>紧急呼叫与快速响应机制，出现问题第一时间链接对应平台资源，守护长者每一天。</p>
+          </div>
+        </div>
       </div>
-      <h3>端到端服务</h3>
-      <p>本平台将融合物业、医院、护理、保险、养老、健康六个方面，打造六位一体的新型养老模式</p>
     </div>
-    <div class="feature">
-      <div class="icon-box">
-        <!-- 蓝：柱状图 -->
-        <svg width="94" height="80" viewBox="0 0 94 80" aria-hidden="true">
-          <rect x="6"    y="41" width="17"   height="34" rx="3.5" fill="#5BC0DE"/>
-          <rect x="37"   y="0"  width="18.5" height="75" rx="3.5" fill="#5BC0DE"/>
-          <rect x="63.5" y="11" width="17.5" height="64" rx="3.5" fill="#5BC0DE"/>
-          <rect x="0"    y="74" width="90"   height="4.5" rx="2"  fill="#5BC0DE"/>
-        </svg>
+  </section>
+
+  <!-- ========== 主要业务 ========== -->
+  <section class="view" id="view-business">
+    <div class="page-head">
+      <h2>主要业务</h2>
+      <p>六位一体新型养老模式 · 覆盖居家养老全场景</p>
+    </div>
+    <div class="page-body">
+      <div class="container">
+        <div class="card-grid">
+          <div class="card">
+            <div class="card-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#5CB85C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 11 L12 4.5 L20 11"/><path d="M6 10 V19.5 H18 V10"/><path d="M10 19.5 V14 H14 V19.5"/>
+              </svg>
+            </div>
+            <h4>物业服务</h4>
+            <p>社区保洁、维修、安保一站式后勤，让居家环境省心无忧</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#DA5B57" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="8.5"/><path d="M12 8 V16"/><path d="M8 12 H16"/>
+              </svg>
+            </div>
+            <h4>医疗对接</h4>
+            <p>合作医院绿色通道，健康档案与就诊预约统一管理</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#EC971F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 19.5 C7 15.5 4.5 12.8 4.5 9.8 C4.5 7.2 6.5 5.5 8.8 5.5 C10.4 5.5 11.5 6.4 12 7.3 C12.5 6.4 13.6 5.5 15.2 5.5 C17.5 5.5 19.5 7.2 19.5 9.8 C19.5 12.8 17 15.5 12 19.5 Z"/>
+              </svg>
+            </div>
+            <h4>护理照护</h4>
+            <p>上门护理、康复训练与日间照料，专业照护送到家</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#5BC0DE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 3.5 L19 6.2 V11.5 C19 16 15.8 19.2 12 20.5 C8.2 19.2 5 16 5 11.5 V6.2 Z"/><path d="M9 11.8 L11.2 14 L15 10"/>
+              </svg>
+            </div>
+            <h4>保险服务</h4>
+            <p>意外险与健康险咨询，理赔协助全程跟进</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#A80063" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="9" cy="9.5" r="3"/><path d="M3.5 19 C3.5 15.5 6 13.5 9 13.5 C12 13.5 14.5 15.5 14.5 19"/>
+                <circle cx="16.5" cy="8" r="2.4"/><path d="M15.5 13.6 C18.5 13.9 20.5 15.8 20.5 19"/>
+              </svg>
+            </div>
+            <h4>养老顾问</h4>
+            <p>居家与机构养老方案个性化定制，专人全程陪同</p>
+          </div>
+          <div class="card">
+            <div class="card-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#009981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M3 12.5 H7.5 L9.5 7.5 L13 17.5 L15 12.5 H21"/>
+              </svg>
+            </div>
+            <h4>健康管理</h4>
+            <p>定期体检、用药提醒与紧急呼叫，健康状态实时掌握</p>
+          </div>
+        </div>
       </div>
-      <h3>迅速支援</h3>
-      <p>老年人居家养老，出现问题，系统可以快速反应链接对应平台</p>
     </div>
+  </section>
+
+  <!-- ========== 联系我们 ========== -->
+  <section class="view" id="view-contact">
+    <div class="page-head">
+      <h2>联系我们</h2>
+      <p>欢迎咨询与建议，我们会尽快回复</p>
+    </div>
+    <div class="page-body">
+      <div class="container contact-layout">
+        <ul class="contact-info">
+          <li>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#009981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M7 4 H10 L11.5 8 L9.5 9.5 C10.4 11.6 12.4 13.6 14.5 14.5 L16 12.5 L20 14 V17 C20 18.1 19.1 19 18 19 C10.5 19 5 13.5 5 6 C5 4.9 5.9 4 7 4 Z"/>
+            </svg>
+            <div><em>咨询电话</em>188 7615 6701</div>
+          </li>
+          <li>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#009981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="8.5"/><path d="M12 7 V12 L15.5 14"/>
+            </svg>
+            <div><em>服务时间</em>周一至周日 9:00 - 18:00</div>
+          </li>
+          <li>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#009981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3.5" y="5.5" width="17" height="13" rx="2"/><path d="M4 7 L12 13 L20 7"/>
+            </svg>
+            <div><em>电子邮箱</em>service@yanglao-demo.cn</div>
+          </li>
+          <li>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#009981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 21 C12 21 5.5 15.5 5.5 10.5 C5.5 6.9 8.4 4 12 4 C15.6 4 18.5 6.9 18.5 10.5 C18.5 15.5 12 21 12 21 Z"/><circle cx="12" cy="10.5" r="2.5"/>
+            </svg>
+            <div><em>办公地址</em>北京市海淀区示例路 88 号 1 号楼（演示地址）</div>
+          </li>
+        </ul>
+        <form class="contact-form" id="contact-form" novalidate>
+          <div class="field">
+            <label for="contact-name">称呼</label>
+            <input id="contact-name" type="text" placeholder="您的称呼">
+          </div>
+          <div class="field">
+            <label for="contact-phone">联系方式</label>
+            <input id="contact-phone" type="text" placeholder="手机号 / 邮箱（选填）">
+          </div>
+          <div class="field">
+            <label for="contact-text">留言内容</label>
+            <textarea id="contact-text" rows="4" placeholder="请描述您的需求或建议"></textarea>
+          </div>
+          <button class="btn-login modal-submit" type="submit">提交留言</button>
+          <p class="msg" id="contact-msg"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- 登录弹窗（用户 / 管理员共用，纯前端演示） -->
+<div class="modal-mask" id="login-modal" role="dialog" aria-modal="true" aria-labelledby="login-title">
+  <div class="modal">
+    <button class="modal-close" id="login-close" type="button" aria-label="关闭">&times;</button>
+    <h3 id="login-title">用户登录</h3>
+    <form id="login-form" novalidate>
+      <div class="field">
+        <label for="login-user">账号</label>
+        <input id="login-user" type="text" placeholder="请输入账号 / 手机号" autocomplete="username">
+      </div>
+      <div class="field">
+        <label for="login-pass">密码</label>
+        <input id="login-pass" type="password" placeholder="请输入密码" autocomplete="current-password">
+      </div>
+      <button class="btn-login modal-submit" type="submit">登 录</button>
+      <p class="msg" id="login-msg"></p>
+    </form>
   </div>
-</section>
+</div>
+
+<footer class="site-footer">&copy; 2026 PCPartner &middot; 养老社区（演示页面，仅前端展示）</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ===== 常量 ===== */
+  var kViews = ['home', 'about', 'business', 'contact'];
+  var kTitles = {
+    home: '养老社区 - PCPartner',
+    about: '关于我们 - 养老社区',
+    business: '主要业务 - 养老社区',
+    contact: '联系我们 - 养老社区'
+  };
+  var kViewOutMs = 260;
+  var kReduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var currentView = 'home';
+  var switching = false;
+  var pendingView = null;
+
+  /* 读取当前 hash 对应的视图名，非法值回落到主页 */
+  function viewNameFromHash() {
+    var name = (location.hash || '').replace('#', '');
+    return kViews.indexOf(name) >= 0 ? name : 'home';
+  }
+
+  /* 高亮当前导航项 */
+  function markActiveNav(name) {
+    var links = document.querySelectorAll('.nav a');
+    for (var i = 0; i < links.length; i++) {
+      links[i].classList.toggle('active', links[i].getAttribute('data-view') === name);
+    }
+  }
+
+  /* 立即切换视图（更新导航、标题，并复位滚动位置） */
+  function applyView(name) {
+    document.getElementById('view-' + currentView).classList.remove('active', 'leaving');
+    document.getElementById('view-' + name).classList.add('active');
+    currentView = name;
+    markActiveNav(name);
+    document.title = kTitles[name];
+    window.scrollTo(0, 0);
+  }
+
+  /* 带出场动画的视图切换；动画期间连点只保留最后一次目标 */
+  function switchTo(name) {
+    if (kViews.indexOf(name) < 0 || name === currentView) return;
+    if (kReduceMotion) { applyView(name); return; }
+    if (switching) { pendingView = name; return; }
+    switching = true;
+    document.getElementById('view-' + currentView).classList.add('leaving');
+    window.setTimeout(function () {
+      applyView(name);
+      switching = false;
+      if (pendingView && pendingView !== currentView) {
+        var next = pendingView;
+        pendingView = null;
+        switchTo(next);
+      } else {
+        pendingView = null;
+      }
+    }, kViewOutMs);
+  }
+
+  /* ===== 登录弹窗 ===== */
+  var modalMask = document.getElementById('login-modal');
+  var modalTitle = document.getElementById('login-title');
+  var loginForm = document.getElementById('login-form');
+  var loginMsg = document.getElementById('login-msg');
+
+  /* 打开弹窗；mode 为 user / admin，仅标题不同 */
+  function openModal(mode) {
+    modalTitle.textContent = mode === 'admin' ? '管理员登录' : '用户登录';
+    loginForm.reset();
+    loginMsg.textContent = '';
+    loginMsg.className = 'msg';
+    modalMask.classList.add('open');
+    document.body.classList.add('modal-open');
+    document.getElementById('login-user').focus();
+  }
+
+  /* 关闭弹窗 */
+  function closeModal() {
+    modalMask.classList.remove('open');
+    document.body.classList.remove('modal-open');
+  }
+
+  document.addEventListener('click', function (e) {
+    var trigger = e.target && e.target.closest ? e.target.closest('[data-modal]') : null;
+    if (trigger) {
+      e.preventDefault();
+      openModal(trigger.getAttribute('data-modal'));
+    }
+  });
+  modalMask.addEventListener('click', function (e) { if (e.target === modalMask) closeModal(); });
+  document.getElementById('login-close').addEventListener('click', closeModal);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && modalMask.classList.contains('open')) closeModal();
+  });
+
+  /* 演示表单：校验必填项非空，给出提示（纯前端，无后端） */
+  function bindDemoForm(formId, msgId, okText, requiredIds) {
+    var form = document.getElementById(formId);
+    var msg = document.getElementById(msgId);
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      for (var i = 0; i < requiredIds.length; i++) {
+        if (!document.getElementById(requiredIds[i]).value.trim()) {
+          msg.textContent = '请填写完整后再提交';
+          msg.className = 'msg error';
+          return;
+        }
+      }
+      msg.textContent = okText;
+      msg.className = 'msg ok';
+      form.reset();
+    });
+  }
+  bindDemoForm('login-form', 'login-msg', '演示提示：本页面未接入后端，无法真实登录。', ['login-user', 'login-pass']);
+  bindDemoForm('contact-form', 'contact-msg', '已提交（演示）：感谢留言，正式环境将发送到平台邮箱。', ['contact-name', 'contact-text']);
+
+  /* ===== 顶栏滚动阴影 ===== */
+  window.addEventListener('scroll', function () {
+    document.querySelector('.site-header').classList.toggle('scrolled', window.scrollY > 4);
+  }, { passive: true });
+
+  /* ===== hash 路由：支持刷新、直链与浏览器前进后退 ===== */
+  window.addEventListener('hashchange', function () { switchTo(viewNameFromHash()); });
+
+  var initial = viewNameFromHash();
+  if (initial !== 'home') {
+    applyView(initial);
+  } else {
+    markActiveNav('home');
+  }
+})();
+</script>
 
 </body>
 </html>
