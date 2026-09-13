@@ -25,25 +25,34 @@
   }
   .site-header.scrolled { box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08); }
   .header-inner { height: 64px; display: flex; align-items: center; }
-  .logo { display: flex; align-items: center; gap: 1px; text-decoration: none; }
-  .logo-text {
-    font-family: "Segoe UI", Arial, sans-serif;
-    font-size: 33px;
-    line-height: 1;
-    display: inline-block;
-    transform: scaleX(0.85);
-    transform-origin: left center;
-    margin-right: -24px; /* 补偿 scaleX 后仍占位的横向宽度 */
+  .logo { display: flex; align-items: center; gap: 7px; text-decoration: none; }
+  .logo-text { display: flex; flex-direction: column; line-height: 1; }
+  .logo-name { font-family: "Segoe UI", Arial, sans-serif; font-size: 26px; font-weight: 800; }
+  .logo-name .logo-pc { color: #009981; }
+  .logo-name i { color: #A80063; font-style: italic; font-weight: 800; }
+  .logo-text small { margin-top: 4px; font-size: 11px; letter-spacing: 5px; color: #999; }
+  .nav { display: flex; gap: 6px; margin-left: 22px; }
+  .nav a {
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 15px;
+    color: #555;
+    text-decoration: none;
+    transition: color 0.2s, background 0.2s, box-shadow 0.2s;
   }
-  .logo-text .logo-pc { color: #009981; font-weight: 900; font-style: normal; }
-  .logo-text .logo-partner { color: #A80063; font-weight: 700; font-style: italic; }
-  .logo-text sup { font-size: 9px; color: #A80063; }
-  .nav { display: flex; gap: 30px; margin-left: 32px; }
-  .nav a { font-size: 15px; color: #555; text-decoration: none; transition: color 0.2s; }
-  .nav a:hover, .nav a.active { color: #A80063; }
-  .header-right { margin-left: auto; margin-right: 37px; display: flex; align-items: center; gap: 34px; font-size: 15px; color: #555; }
-  .header-right a { color: #555; text-decoration: none; transition: color 0.2s; }
+  .nav a:hover { color: #A80063; background: rgba(168, 0, 99, 0.06); }
+  .nav a.active {
+    color: #A80063;
+    background: rgba(168, 0, 99, 0.09);
+    box-shadow: inset 0 0 0 1px rgba(168, 0, 99, 0.18);
+  }
+  .header-right { margin-left: auto; margin-right: 37px; display: flex; align-items: center; gap: 30px; font-size: 15px; color: #555; white-space: nowrap; }
+  .header-phone { display: inline-flex; align-items: center; gap: 6px; }
+  .header-right a { color: #555; text-decoration: none; transition: color 0.2s, background 0.2s, border-color 0.2s; }
   .header-right a:hover { color: #A80063; }
+  .admin-chip { padding: 5px 14px; border-radius: 999px; border: 1px solid rgba(168, 0, 99, 0.35); }
+  .header-right a.admin-chip { color: #A80063; }
+  .header-right a.admin-chip:hover { color: #fff; background: #A80063; border-color: #A80063; }
 
   /* ========== 视图切换 ========== */
   .view { display: none; }
@@ -58,32 +67,73 @@
     to   { opacity: 0; transform: translateY(-14px); }
   }
 
-  /* ========== 英雄区 ========== */
+  /* ========== 英雄区（多图轮播） ========== */
   .hero {
-    height: 285px;
-    background: #4a423c url("https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1920&q=80") center/cover no-repeat;
+    height: 420px;
+    background: #4a423c;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
   }
+  .hero-slides { position: absolute; inset: 0; z-index: 0; }
+  .hero-slide {
+    position: absolute;
+    inset: 0;
+    background: center 40%/cover no-repeat;
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+  .hero-slide.active { opacity: 1; animation: heroZoom 7s ease-out both; }
+  @keyframes heroZoom { from { transform: scale(1); } to { transform: scale(1.07); } }
   .hero::before {
     content: "";
     position: absolute;
     inset: 0;
+    z-index: 1;
     background: rgba(0, 0, 0, 0.42);
   }
-  .hero-content { position: relative; text-align: center; padding-top: 15px; }
-  .hero-title {
-    font-size: 64px;
-    font-weight: 300;
-    color: #fff;
-    line-height: 1;
-    letter-spacing: -4px;
-    transform: scaleY(1.28);
-    transform-origin: 50% 50%;
+  .hero-content { position: relative; z-index: 2; text-align: center; }
+  .hero-dots {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 16px;
+    z-index: 3;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
   }
-  .hero-subtitle { font-size: 20px; color: #fff; line-height: 1.5; margin-top: 2px; }
+  .hero-dot {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border: none;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.45);
+    cursor: pointer;
+    transition: width 0.3s, background 0.3s;
+  }
+  .hero-dot:hover { background: rgba(255, 255, 255, 0.75); }
+  .hero-dot.active { width: 22px; background: #fff; }
+  .hero-title {
+    font-size: 58px;
+    font-weight: 500;
+    color: #fff;
+    line-height: 1.15;
+    letter-spacing: 6px;
+    text-indent: 6px;
+    text-shadow: 0 2px 18px rgba(0, 0, 0, 0.35);
+  }
+  .hero-subtitle {
+    font-size: 19px;
+    color: rgba(255, 255, 255, 0.92);
+    line-height: 1.6;
+    letter-spacing: 1px;
+    margin-top: 14px;
+    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.3);
+  }
   .btn-login {
     display: inline-block;
     margin-top: 14px;
@@ -99,20 +149,110 @@
     cursor: pointer;
     transition: background 0.2s;
   }
-  .btn-login:hover { background: #4CAE4C; }
+  .btn-login:hover { background: #4CAE4C; box-shadow: 0 6px 16px rgba(92, 184, 92, 0.35); }
 
   /* ========== 三栏特性区 ========== */
-  .features { padding: 118px 0 120px; }
-  .features .container { display: flex; text-align: center; }
-  .feature { flex: 1; padding: 0 15px; }
+  .features { padding: 118px 0 120px; background: linear-gradient(120deg, #edf9f6 0%, #fdf1f8 100%); }
+  .features-row { display: flex; flex-wrap: wrap; gap: 22px; text-align: center; }
+  .feature {
+    flex: 1;
+    padding: 34px 24px 30px;
+    border-radius: 12px;
+    transition: transform 0.25s, box-shadow 0.25s;
+  }
+  .feature:hover { transform: translateY(-4px); box-shadow: 0 12px 26px rgba(0, 0, 0, 0.07); }
   .feature .icon-box { height: 92px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
   .feature h3 { font-size: 23px; font-weight: 400; color: #666; margin-bottom: 7px; }
   .feature p { font-size: 13.5px; color: #777; line-height: 1.48; }
+  .feature.clickable { cursor: pointer; }
+  .feature.clickable:focus-visible { outline: 2px solid #EC971F; outline-offset: 3px; }
+  .expand-hint { display: inline-block; margin-top: 12px; font-size: 13px; color: #EC971F; }
+
+  /* ========== 六位一体展开面板 ========== */
+  .six-panel {
+    flex: 0 0 100%;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.5s ease, opacity 0.4s ease, margin-top 0.5s ease;
+  }
+  .six-panel.open { opacity: 1; margin-top: 12px; }
+  .six-panel:not(.open) { margin-bottom: -22px; } /* 收起时抵消 flex 行间距 */
+  .six-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid rgba(0, 153, 129, 0.16);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  }
+  .six-item {
+    flex: 1 1 150px;
+    padding: 16px 8px 14px;
+    border-radius: 10px;
+    text-align: center;
+    text-decoration: none;
+    transition: transform 0.25s, box-shadow 0.25s;
+  }
+  .six-item:hover { transform: translateY(-3px); box-shadow: 0 8px 18px rgba(0, 0, 0, 0.07); }
+  .six-badge {
+    display: flex;
+    width: 44px;
+    height: 44px;
+    margin: 0 auto 10px;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+  }
+  .six-item b { display: block; font-size: 14px; font-weight: 500; }
+  .six-item span { display: block; margin-top: 4px; font-size: 12px; color: #888; }
+  .six-panel.open .six-item { animation: sixUp 0.45s cubic-bezier(0.22, 0.61, 0.36, 1) both; }
+  .six-panel.open .six-item:nth-child(1) { animation-delay: 0.03s; }
+  .six-panel.open .six-item:nth-child(2) { animation-delay: 0.09s; }
+  .six-panel.open .six-item:nth-child(3) { animation-delay: 0.15s; }
+  .six-panel.open .six-item:nth-child(4) { animation-delay: 0.21s; }
+  .six-panel.open .six-item:nth-child(5) { animation-delay: 0.27s; }
+  .six-panel.open .six-item:nth-child(6) { animation-delay: 0.33s; }
+  @keyframes sixUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  /* ========== 主题色浅底 / 彩色文字工具类 ========== */
+  .tint-green   { background: rgba(92, 184, 92, 0.06); }
+  .tint-red     { background: rgba(218, 91, 87, 0.07); }
+  .tint-orange  { background: rgba(236, 151, 31, 0.09); }
+  .tint-blue    { background: rgba(91, 192, 222, 0.1); }
+  .tint-magenta { background: rgba(168, 0, 99, 0.05); }
+  .tint-teal    { background: rgba(0, 153, 129, 0.06); }
+  .bg-green-soft   { background: rgba(92, 184, 92, 0.14); }
+  .bg-red-soft     { background: rgba(218, 91, 87, 0.12); }
+  .bg-orange-soft  { background: rgba(236, 151, 31, 0.14); }
+  .bg-blue-soft    { background: rgba(91, 192, 222, 0.16); }
+  .bg-magenta-soft { background: rgba(168, 0, 99, 0.1); }
+  .bg-teal-soft    { background: rgba(0, 153, 129, 0.12); }
+  .c-green   { color: #5CB85C; }
+  .c-red     { color: #DA5B57; }
+  .c-orange  { color: #EC971F; }
+  .c-blue    { color: #5BC0DE; }
+  .c-magenta { color: #A80063; }
+  .c-teal    { color: #009981; }
 
   /* ========== 子页面通用 ========== */
-  .page-head { background: #f5f6f7; padding: 42px 20px 38px; text-align: center; }
+  .page-head { background: linear-gradient(120deg, #edf9f6 0%, #fdf1f8 100%); padding: 42px 20px 38px; text-align: center; }
   .page-head h2 { font-size: 26px; font-weight: 400; color: #333; }
-  .page-head p { margin-top: 10px; font-size: 14px; color: #888; }
+  .page-head h2::after {
+    content: "";
+    display: block;
+    width: 46px;
+    height: 3px;
+    border-radius: 2px;
+    margin: 12px auto 0;
+    background: linear-gradient(90deg, #009981, #A80063);
+  }
+  .page-head p { margin-top: 12px; font-size: 14px; color: #888; }
   .page-body { padding: 56px 0 88px; }
 
   /* ========== 关于我们 ========== */
@@ -127,21 +267,47 @@
   .stat-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; margin-bottom: 56px; }
   .stat { flex: 0 1 200px; text-align: center; }
   .stat b { display: block; font-size: 34px; font-weight: 600; color: #009981; }
+  .stat:nth-child(2) b { color: #EC971F; }
+  .stat:nth-child(3) b { color: #A80063; }
+  .stat:nth-child(4) b { color: #5BC0DE; }
   .stat span { display: block; margin-top: 6px; font-size: 13.5px; color: #888; }
 
   /* ========== 卡片（关于/业务共用） ========== */
   .card-grid { display: flex; flex-wrap: wrap; gap: 24px; }
   .card {
     flex: 1 1 300px;
+    display: block;
     background: #fff;
     border: 1px solid #eee;
     border-radius: 8px;
     padding: 30px 24px 26px;
     text-align: center;
+    color: inherit;
+    text-decoration: none;
     transition: box-shadow 0.25s, transform 0.25s;
   }
   .card:hover { box-shadow: 0 8px 22px rgba(0, 0, 0, 0.07); transform: translateY(-3px); }
-  .card .card-icon { height: 52px; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; }
+  .card .card-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 14px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .card.tint-green { border-color: rgba(92, 184, 92, 0.18); }
+  .card.tint-green h4 { color: #5CB85C; }
+  .card.tint-red { border-color: rgba(218, 91, 87, 0.18); }
+  .card.tint-red h4 { color: #DA5B57; }
+  .card.tint-orange { border-color: rgba(236, 151, 31, 0.2); }
+  .card.tint-orange h4 { color: #EC971F; }
+  .card.tint-blue { border-color: rgba(91, 192, 222, 0.22); }
+  .card.tint-blue h4 { color: #5BC0DE; }
+  .card.tint-magenta { border-color: rgba(168, 0, 99, 0.15); }
+  .card.tint-magenta h4 { color: #A80063; }
+  .card.tint-teal { border-color: rgba(0, 153, 129, 0.18); }
+  .card.tint-teal h4 { color: #009981; }
   .card h4 { font-size: 18px; font-weight: 500; color: #444; margin-bottom: 10px; }
   .card p { font-size: 13.5px; color: #777; line-height: 1.7; }
 
@@ -158,9 +324,16 @@
     color: #555;
     line-height: 1.6;
   }
-  .contact-info li svg { flex: 0 0 auto; margin-top: 1px; }
+  .contact-info li svg {
+    flex: 0 0 auto;
+    width: 36px;
+    height: 36px;
+    padding: 8px;
+    border-radius: 50%;
+    background: rgba(0, 153, 129, 0.1);
+  }
   .contact-info li em { display: block; font-style: normal; font-size: 13px; color: #999; margin-bottom: 3px; }
-  .contact-form { flex: 1 1 420px; background: #fafbfc; border: 1px solid #eee; border-radius: 8px; padding: 28px; }
+  .contact-form { flex: 1 1 420px; background: rgba(0, 153, 129, 0.035); border: 1px solid rgba(0, 153, 129, 0.16); border-radius: 8px; padding: 28px; }
   .field { margin-bottom: 16px; }
   .field label { display: block; font-size: 13.5px; color: #555; margin-bottom: 6px; }
   .field input, .field textarea {
@@ -176,6 +349,44 @@
     resize: vertical;
   }
   .field input:focus, .field textarea:focus { border-color: #009981; }
+
+  /* ========== 服务详情（六位一体各模块） ========== */
+  .back-link { display: inline-block; margin-bottom: 14px; font-size: 13px; color: #888; text-decoration: none; transition: color 0.2s; }
+  .back-link:hover { color: #A80063; }
+  .service-stage { display: flex; flex-wrap: wrap; align-items: center; gap: 44px; margin-bottom: 52px; }
+  .service-art { flex: 1 1 320px; border-radius: 14px; padding: 22px 18px; }
+  .service-art svg { display: block; width: 100%; height: auto; }
+  .service-side { flex: 1 1 400px; }
+  .service-intro { margin: 0; font-size: 15.5px; line-height: 1.95; color: #666; }
+  .service-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+  .service-chip { padding: 5px 13px; border-radius: 999px; font-size: 12.5px; font-weight: 500; }
+  .art-green { background: rgba(92, 184, 92, 0.08); border: 1px solid rgba(92, 184, 92, 0.22); }
+  .art-red { background: rgba(218, 91, 87, 0.07); border: 1px solid rgba(218, 91, 87, 0.2); }
+  .art-orange { background: rgba(236, 151, 31, 0.09); border: 1px solid rgba(236, 151, 31, 0.24); }
+  .art-blue { background: rgba(91, 192, 222, 0.1); border: 1px solid rgba(91, 192, 222, 0.26); }
+  .art-magenta { background: rgba(168, 0, 99, 0.05); border: 1px solid rgba(168, 0, 99, 0.16); }
+  .art-teal { background: rgba(0, 153, 129, 0.07); border: 1px solid rgba(0, 153, 129, 0.2); }
+  .art-spin, .art-pulse, .art-ring, .art-float, .art-draw { transform-box: fill-box; transform-origin: center; }
+  .art-spin { animation: artSpin 18s linear infinite; }
+  .art-ring { animation: artSpin 26s linear infinite reverse; }
+  .art-pulse { animation: artPulse 2.6s ease-in-out infinite; }
+  .art-float { animation: artFloat 3.4s ease-in-out infinite; }
+  .art-blink { animation: artBlink 2.2s ease-in-out infinite; }
+  .art-ecg { stroke-dasharray: 90 340; animation: artEcg 3.2s linear infinite; }
+  .art-draw { stroke-dasharray: 68; animation: artDraw 3.4s ease-in-out infinite; }
+  @keyframes artSpin { to { transform: rotate(360deg); } }
+  @keyframes artPulse { 0%, 100% { transform: scale(1); } 12% { transform: scale(1.08); } 24% { transform: scale(1); } 36% { transform: scale(1.05); } 48% { transform: scale(1); } }
+  @keyframes artFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+  @keyframes artBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+  @keyframes artEcg { to { stroke-dashoffset: -430; } }
+  @keyframes artDraw { 0% { stroke-dashoffset: 68; } 40% { stroke-dashoffset: 0; } 75% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: 68; } }
+  .service-section-title { text-align: center; font-size: 20px; font-weight: 500; color: #444; margin-bottom: 22px; }
+  .service-items { list-style: none; display: flex; flex-wrap: wrap; gap: 14px; max-width: 920px; margin: 0 auto 46px; }
+  .service-items li { flex: 1 1 44%; display: flex; align-items: center; gap: 10px; background: #fafbfc; border: 1px solid #eef0f2; border-radius: 8px; padding: 14px 18px; font-size: 14px; color: #555; }
+  .service-items li svg { flex: 0 0 auto; }
+  .service-cta { text-align: center; }
+  .service-phone { margin-left: 18px; font-size: 14px; color: #888; }
+  .card-more { display: inline-block; margin-top: 12px; font-size: 12.5px; font-weight: 500; }
 
   /* ========== 弹窗 ========== */
   body.modal-open { overflow: hidden; }
@@ -196,7 +407,17 @@
     border-radius: 10px;
     padding: 30px 28px 24px;
     position: relative;
+    overflow: hidden;
     animation: modalIn 0.3s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  }
+  .modal::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #009981, #A80063);
   }
   @keyframes maskIn { from { opacity: 0; } to { opacity: 1; } }
   @keyframes modalIn {
@@ -223,18 +444,52 @@
   .msg.ok { color: #5CB85C; }
 
   /* ========== 页脚 ========== */
-  .site-footer { border-top: 1px solid #eee; padding: 24px 0; text-align: center; font-size: 13px; color: #999; }
+  .site-footer { position: relative; padding: 24px 0; text-align: center; font-size: 13px; color: #999; background: linear-gradient(120deg, #f2faf8 0%, #fdf4fa 100%); }
+  .site-footer::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, rgba(0, 153, 129, 0.3), rgba(168, 0, 99, 0.3), rgba(236, 151, 31, 0.3));
+  }
 
   /* ========== 窄屏适配 ========== */
   @media (max-width: 992px) {
     .nav { display: none; }
-    .features .container { flex-wrap: wrap; }
-    .feature { flex: 1 1 100%; margin-bottom: 48px; }
-    .feature:last-child { margin-bottom: 0; }
+    .logo-name { font-size: 22px; }
+    .header-right { margin-right: 0; gap: 10px; font-size: 12.5px; }
+    .features-row { flex-wrap: wrap; }
+    .feature { flex: 1 1 100%; }
+    .six-panel { order: 3; }
+    .feature.tint-blue { order: 4; }
+    .service-stage { gap: 26px; }
+    .service-items li { flex: 1 1 100%; }
+    .hero { height: 360px; }
+  }
+  @media (max-width: 480px) {
+    .hero-title { font-size: 44px; letter-spacing: 4px; text-indent: 4px; }
+    .hero-subtitle { font-size: 16px; }
+  }
+  @media (max-width: 480px) {
+    .phone-label { display: none; }
+    .header-right { gap: 8px; }
+    .header-phone { gap: 4px; }
+    .admin-chip { padding: 4px 9px; }
+    .header-phone svg { width: 14px; height: 14px; }
+  }
+  @media (max-width: 400px) {
+    .header-right { font-size: 12px; gap: 6px; }
+    .header-phone svg { display: none; }
+    .admin-chip { padding: 3px 8px; }
   }
   @media (prefers-reduced-motion: reduce) {
     .view.active, .view.leaving, .modal-mask.open, .modal { animation: none !important; }
-    .card { transition: none; }
+    .six-panel.open .six-item { animation: none !important; }
+    .art-spin, .art-ring, .art-pulse, .art-float, .art-blink, .art-ecg, .art-draw { animation: none !important; }
+    .hero-slide { transition: none; animation: none !important; }
+    .card, .feature, .six-item, .six-panel { transition: none; }
   }
 </style>
 </head>
@@ -244,28 +499,18 @@
 <header class="site-header">
   <div class="container header-inner">
     <a class="logo" href="#home">
-      <!-- 拼图风标志 -->
-      <svg width="47" height="46" viewBox="0 0 47 46" aria-hidden="true">
+      <!-- 屋顶爱心标志：房屋 + 爱心，品牌双色渐变 -->
+      <svg width="48" height="46" viewBox="0 0 48 46" aria-hidden="true">
         <defs>
-          <linearGradient id="gTL" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0.45" stop-color="#fff"/><stop offset="1" stop-color="#A80063"/>
-          </linearGradient>
-          <linearGradient id="gTR" x1="1" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#A80063"/><stop offset="0.75" stop-color="#fff"/>
-          </linearGradient>
-          <linearGradient id="gBL" x1="0" y1="1" x2="1" y2="0">
-            <stop offset="0" stop-color="#A80063"/><stop offset="0.75" stop-color="#fff"/>
-          </linearGradient>
-          <linearGradient id="gBR" x1="1" y1="1" x2="0" y2="0">
-            <stop offset="0.45" stop-color="#fff"/><stop offset="1" stop-color="#A80063"/>
+          <linearGradient id="logoGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#009981"/><stop offset="1" stop-color="#A80063"/>
           </linearGradient>
         </defs>
-        <rect x="2"  y="2"  width="19" height="19" rx="2.5" fill="url(#gTL)" stroke="#A80063" stroke-width="2.5" transform="rotate(45 12.5 11.5)"/>
-        <rect x="25" y="2"  width="19" height="19" rx="2.5" fill="url(#gTR)" transform="rotate(45 34.5 11.5)"/>
-        <rect x="2"  y="25" width="19" height="19" rx="2.5" fill="url(#gBL)" transform="rotate(45 12.5 34.5)"/>
-        <rect x="25" y="25" width="19" height="19" rx="2.5" fill="url(#gBR)" stroke="#A80063" stroke-width="2.5" transform="rotate(45 34.5 34.5)"/>
+        <path d="M5,21 L24,5 L43,21" fill="none" stroke="url(#logoGrad)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+        <rect x="10" y="21" width="28" height="21" rx="4" fill="none" stroke="url(#logoGrad)" stroke-width="5"/>
+        <path d="M24 38.5 C19.6 34.7 17 32.1 17 29.4 C17 27.1 18.8 25.6 20.8 25.6 C22.2 25.6 23.4 26.4 24 27.5 C24.6 26.4 25.8 25.6 27.2 25.6 C29.2 25.6 31 27.1 31 29.4 C31 32.1 28.4 34.7 24 38.5 Z" fill="url(#logoGrad)"/>
       </svg>
-      <span class="logo-text"><b class="logo-pc">PC</b><i class="logo-partner">Partner</i><sup>&reg;</sup></span>
+      <span class="logo-text"><b class="logo-name"><span class="logo-pc">PC</span><i>Partner</i></b><small>养老社区</small></span>
     </a>
     <nav class="nav">
       <a href="#home"     data-view="home">主页</a>
@@ -274,8 +519,13 @@
       <a href="#contact"  data-view="contact">联系我们</a>
     </nav>
     <div class="header-right">
-      <span>电话:188 7615 6701</span>
-      <a href="#" data-modal="admin">管理员登录</a>
+      <span class="header-phone">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#009981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M7 4 H10 L11.5 8 L9.5 9.5 C10.4 11.6 12.4 13.6 14.5 14.5 L16 12.5 L20 14 V17 C20 18.1 19.1 19 18 19 C10.5 19 5 13.5 5 6 C5 4.9 5.9 4 7 4 Z"/>
+        </svg>
+        <span class="phone-label">电话:</span>188 7615 6701
+      </span>
+      <a class="admin-chip" href="#" data-modal="admin">管理员登录</a>
     </div>
   </div>
 </header>
@@ -284,15 +534,29 @@
   <!-- ========== 主页 ========== -->
   <section class="view active" id="view-home">
     <div class="hero">
+      <div class="hero-slides">
+        <div class="hero-slide active" style="background-image:url('https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1920&q=80');background-position:center 45%"></div>
+        <div class="hero-slide" data-bg="https://images.unsplash.com/photo-1513159446162-54eb8bdaa79b?auto=format&fit=crop&w=1600&q=70" style="background-position:center 25%"></div>
+        <div class="hero-slide" data-bg="https://images.unsplash.com/photo-1758691031036-5b7b635e30b8?auto=format&fit=crop&w=1600&q=70" style="background-position:center 35%"></div>
+        <div class="hero-slide" data-bg="https://images.unsplash.com/photo-1543333995-a78aea2eee50?auto=format&fit=crop&w=1600&q=70" style="background-position:center 65%"></div>
+        <div class="hero-slide" data-bg="https://images.unsplash.com/photo-1584515933487-779824d29309?auto=format&fit=crop&w=1600&q=70" style="background-position:center 50%"></div>
+      </div>
       <div class="hero-content">
         <h1 class="hero-title">养老社区</h1>
         <p class="hero-subtitle">我国已经进入老龄社会，随着中国同龄人步入老年，将出现第一次老年人口增长高峰。</p>
         <button class="btn-login" type="button" data-modal="user">用户登录</button>
       </div>
+      <div class="hero-dots">
+        <button class="hero-dot active" type="button" data-slide="0" aria-label="第 1 张"></button>
+        <button class="hero-dot" type="button" data-slide="1" aria-label="第 2 张"></button>
+        <button class="hero-dot" type="button" data-slide="2" aria-label="第 3 张"></button>
+        <button class="hero-dot" type="button" data-slide="3" aria-label="第 4 张"></button>
+        <button class="hero-dot" type="button" data-slide="4" aria-label="第 5 张"></button>
+      </div>
     </div>
     <div class="features">
-      <div class="container">
-        <div class="feature">
+      <div class="container features-row">
+        <div class="feature tint-red">
           <div class="icon-box">
             <!-- 红：企字圆环 + 速度线 -->
             <svg width="94" height="72" viewBox="0 0 94 72" fill="none" aria-hidden="true">
@@ -307,7 +571,7 @@
           <h3>丰富的经验积累</h3>
           <p>团队拥有此类项目经验，且团队成员和指导老师皆有一定的能力水平</p>
         </div>
-        <div class="feature">
+        <div class="feature tint-orange clickable" id="feature-six" role="button" tabindex="0" aria-expanded="false" aria-controls="six-panel">
           <div class="icon-box">
             <!-- 橙：三人剪影 -->
             <svg width="94" height="88" viewBox="0 0 94 88" aria-hidden="true">
@@ -321,8 +585,9 @@
           </div>
           <h3>端到端服务</h3>
           <p>本平台将融合物业、医院、护理、保险、养老、健康六个方面，打造六位一体的新型养老模式</p>
+          <span class="expand-hint" id="six-hint">点击展开六位一体 ▾</span>
         </div>
-        <div class="feature">
+        <div class="feature tint-blue">
           <div class="icon-box">
             <!-- 蓝：柱状图 -->
             <svg width="94" height="80" viewBox="0 0 94 80" aria-hidden="true">
@@ -334,6 +599,65 @@
           </div>
           <h3>迅速支援</h3>
           <p>老年人居家养老，出现问题，系统可以快速反应链接对应平台</p>
+        </div>
+        <div class="six-panel" id="six-panel">
+          <div class="six-grid">
+            <a class="six-item tint-green" href="#service-property">
+              <div class="six-badge bg-green-soft">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5CB85C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M4 11 L12 4.5 L20 11"/><path d="M6 10 V19.5 H18 V10"/><path d="M10 19.5 V14 H14 V19.5"/>
+                </svg>
+              </div>
+              <b class="c-green">物业服务</b>
+              <span>省心后勤</span>
+            </a>
+            <a class="six-item tint-red" href="#service-medical">
+              <div class="six-badge bg-red-soft">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#DA5B57" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="8.5"/><path d="M12 8 V16"/><path d="M8 12 H16"/>
+                </svg>
+              </div>
+              <b class="c-red">医疗对接</b>
+              <span>绿色通道</span>
+            </a>
+            <a class="six-item tint-orange" href="#service-nursing">
+              <div class="six-badge bg-orange-soft">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#EC971F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M12 19.5 C7 15.5 4.5 12.8 4.5 9.8 C4.5 7.2 6.5 5.5 8.8 5.5 C10.4 5.5 11.5 6.4 12 7.3 C12.5 6.4 13.6 5.5 15.2 5.5 C17.5 5.5 19.5 7.2 19.5 9.8 C19.5 12.8 17 15.5 12 19.5 Z"/>
+                </svg>
+              </div>
+              <b class="c-orange">护理照护</b>
+              <span>照护到家</span>
+            </a>
+            <a class="six-item tint-blue" href="#service-insurance">
+              <div class="six-badge bg-blue-soft">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5BC0DE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M12 3.5 L19 6.2 V11.5 C19 16 15.8 19.2 12 20.5 C8.2 19.2 5 16 5 11.5 V6.2 Z"/><path d="M9 11.8 L11.2 14 L15 10"/>
+                </svg>
+              </div>
+              <b class="c-blue">保险服务</b>
+              <span>理赔协助</span>
+            </a>
+            <a class="six-item tint-magenta" href="#service-advisor">
+              <div class="six-badge bg-magenta-soft">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#A80063" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="9" cy="9.5" r="3"/><path d="M3.5 19 C3.5 15.5 6 13.5 9 13.5 C12 13.5 14.5 15.5 14.5 19"/>
+                  <circle cx="16.5" cy="8" r="2.4"/><path d="M15.5 13.6 C18.5 13.9 20.5 15.8 20.5 19"/>
+                </svg>
+              </div>
+              <b class="c-magenta">养老顾问</b>
+              <span>个性化定制</span>
+            </a>
+            <a class="six-item tint-teal" href="#service-health">
+              <div class="six-badge bg-teal-soft">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#009981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M3 12.5 H7.5 L9.5 7.5 L13 17.5 L15 12.5 H21"/>
+                </svg>
+              </div>
+              <b class="c-teal">健康管理</b>
+              <span>实时掌握</span>
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -358,15 +682,15 @@
           <div class="stat"><b>98%</b><span>用户满意度</span></div>
         </div>
         <div class="card-grid">
-          <div class="card">
+          <div class="card tint-teal">
             <h4>专业</h4>
             <p>团队拥有此类项目经验，成员与指导老师均具备成熟的养老服务体系能力，服务流程标准化。</p>
           </div>
-          <div class="card">
+          <div class="card tint-orange">
             <h4>温暖</h4>
             <p>从日常照料到情感陪伴，让老年人居家也能感受到社区的温度，不是亲人胜似亲人。</p>
           </div>
-          <div class="card">
+          <div class="card tint-blue">
             <h4>安全</h4>
             <p>紧急呼叫与快速响应机制，出现问题第一时间链接对应平台资源，守护长者每一天。</p>
           </div>
@@ -384,44 +708,48 @@
     <div class="page-body">
       <div class="container">
         <div class="card-grid">
-          <div class="card">
-            <div class="card-icon">
+          <a class="card tint-green" href="#service-property">
+            <div class="card-icon bg-green-soft">
               <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#5CB85C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M4 11 L12 4.5 L20 11"/><path d="M6 10 V19.5 H18 V10"/><path d="M10 19.5 V14 H14 V19.5"/>
               </svg>
             </div>
             <h4>物业服务</h4>
             <p>社区保洁、维修、安保一站式后勤，让居家环境省心无忧</p>
-          </div>
-          <div class="card">
-            <div class="card-icon">
+            <span class="card-more c-green">查看详情 →</span>
+          </a>
+          <a class="card tint-red" href="#service-medical">
+            <div class="card-icon bg-red-soft">
               <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#DA5B57" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <circle cx="12" cy="12" r="8.5"/><path d="M12 8 V16"/><path d="M8 12 H16"/>
               </svg>
             </div>
             <h4>医疗对接</h4>
             <p>合作医院绿色通道，健康档案与就诊预约统一管理</p>
-          </div>
-          <div class="card">
-            <div class="card-icon">
+            <span class="card-more c-red">查看详情 →</span>
+          </a>
+          <a class="card tint-orange" href="#service-nursing">
+            <div class="card-icon bg-orange-soft">
               <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#EC971F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M12 19.5 C7 15.5 4.5 12.8 4.5 9.8 C4.5 7.2 6.5 5.5 8.8 5.5 C10.4 5.5 11.5 6.4 12 7.3 C12.5 6.4 13.6 5.5 15.2 5.5 C17.5 5.5 19.5 7.2 19.5 9.8 C19.5 12.8 17 15.5 12 19.5 Z"/>
               </svg>
             </div>
             <h4>护理照护</h4>
             <p>上门护理、康复训练与日间照料，专业照护送到家</p>
-          </div>
-          <div class="card">
-            <div class="card-icon">
+            <span class="card-more c-orange">查看详情 →</span>
+          </a>
+          <a class="card tint-blue" href="#service-insurance">
+            <div class="card-icon bg-blue-soft">
               <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#5BC0DE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M12 3.5 L19 6.2 V11.5 C19 16 15.8 19.2 12 20.5 C8.2 19.2 5 16 5 11.5 V6.2 Z"/><path d="M9 11.8 L11.2 14 L15 10"/>
               </svg>
             </div>
             <h4>保险服务</h4>
             <p>意外险与健康险咨询，理赔协助全程跟进</p>
-          </div>
-          <div class="card">
-            <div class="card-icon">
+            <span class="card-more c-blue">查看详情 →</span>
+          </a>
+          <a class="card tint-magenta" href="#service-advisor">
+            <div class="card-icon bg-magenta-soft">
               <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#A80063" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <circle cx="9" cy="9.5" r="3"/><path d="M3.5 19 C3.5 15.5 6 13.5 9 13.5 C12 13.5 14.5 15.5 14.5 19"/>
                 <circle cx="16.5" cy="8" r="2.4"/><path d="M15.5 13.6 C18.5 13.9 20.5 15.8 20.5 19"/>
@@ -429,16 +757,18 @@
             </div>
             <h4>养老顾问</h4>
             <p>居家与机构养老方案个性化定制，专人全程陪同</p>
-          </div>
-          <div class="card">
-            <div class="card-icon">
+            <span class="card-more c-magenta">查看详情 →</span>
+          </a>
+          <a class="card tint-teal" href="#service-health">
+            <div class="card-icon bg-teal-soft">
               <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#009981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M3 12.5 H7.5 L9.5 7.5 L13 17.5 L15 12.5 H21"/>
               </svg>
             </div>
             <h4>健康管理</h4>
             <p>定期体检、用药提醒与紧急呼叫，健康状态实时掌握</p>
-          </div>
+            <span class="card-more c-teal">查看详情 →</span>
+          </a>
         </div>
       </div>
     </div>
@@ -497,6 +827,32 @@
       </div>
     </div>
   </section>
+
+  <!-- ========== 服务详情（六位一体各模块） ========== -->
+  <section class="view" id="view-service">
+    <div class="page-head">
+      <a class="back-link" href="#business">← 返回主要业务</a>
+      <h2 id="service-title">服务详情</h2>
+      <p id="service-subtitle"></p>
+    </div>
+    <div class="page-body">
+      <div class="container">
+        <div class="service-stage">
+          <div class="service-art" id="service-art"></div>
+          <div class="service-side">
+            <p class="service-intro" id="service-intro"></p>
+            <div class="service-chips" id="service-chips"></div>
+          </div>
+        </div>
+        <h4 class="service-section-title">服务内容</h4>
+        <ul class="service-items" id="service-items"></ul>
+        <div class="service-cta">
+          <a class="btn-login" href="#contact">在线咨询</a>
+          <span class="service-phone">电话：188 7615 6701</span>
+        </div>
+      </div>
+    </div>
+  </section>
 </main>
 
 <!-- 登录弹窗（用户 / 管理员共用，纯前端演示） -->
@@ -519,7 +875,7 @@
   </div>
 </div>
 
-<footer class="site-footer">&copy; 2026 PCPartner &middot; 养老社区（演示页面，仅前端展示）</footer>
+<footer class="site-footer">&copy; 2026 PCPartner &middot; 养老社区</footer>
 
 <script>
 (function () {
@@ -537,13 +893,17 @@
   var kReduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   var currentView = 'home';
+  var currentKey = null;
   var switching = false;
   var pendingView = null;
 
-  /* 读取当前 hash 对应的视图名，非法值回落到主页 */
-  function viewNameFromHash() {
-    var name = (location.hash || '').replace('#', '');
-    return kViews.indexOf(name) >= 0 ? name : 'home';
+  /* 解析 hash 为路由目标：service-xxx 进入服务详情，其余为普通视图 */
+  function routeFromHash() {
+    var h = (location.hash || '').replace('#', '');
+    if (h.indexOf('service-') === 0 && kServices[h.slice(8)]) {
+      return { view: 'service', key: h.slice(8) };
+    }
+    return { view: kViews.indexOf(h) >= 0 ? h : 'home', key: null };
   }
 
   /* 高亮当前导航项 */
@@ -554,27 +914,30 @@
     }
   }
 
-  /* 立即切换视图（更新导航、标题，并复位滚动位置） */
-  function applyView(name) {
+  /* 立即切换视图（服务详情先渲染数据，再更新导航、标题并复位滚动） */
+  function applyView(target) {
     document.getElementById('view-' + currentView).classList.remove('active', 'leaving');
-    document.getElementById('view-' + name).classList.add('active');
-    currentView = name;
-    markActiveNav(name);
-    document.title = kTitles[name];
+    if (target.view === 'service') renderService(target.key);
+    document.getElementById('view-' + target.view).classList.add('active');
+    currentView = target.view;
+    currentKey = target.key;
+    markActiveNav(target.view === 'service' ? 'business' : target.view);
+    document.title = target.view === 'service' ? kServices[target.key].name + ' - 养老社区' : kTitles[target.view];
     window.scrollTo(0, 0);
   }
 
   /* 带出场动画的视图切换；动画期间连点只保留最后一次目标 */
-  function switchTo(name) {
-    if (kViews.indexOf(name) < 0 || name === currentView) return;
-    if (kReduceMotion) { applyView(name); return; }
-    if (switching) { pendingView = name; return; }
+  function switchTo(target) {
+    if (!target || !target.view) return;
+    if (target.view === currentView && target.key === currentKey) return;
+    if (kReduceMotion) { applyView(target); return; }
+    if (switching) { pendingView = target; return; }
     switching = true;
     document.getElementById('view-' + currentView).classList.add('leaving');
     window.setTimeout(function () {
-      applyView(name);
+      applyView(target);
       switching = false;
-      if (pendingView && pendingView !== currentView) {
+      if (pendingView && !(pendingView.view === currentView && pendingView.key === currentKey)) {
         var next = pendingView;
         pendingView = null;
         switchTo(next);
@@ -583,6 +946,57 @@
       }
     }, kViewOutMs);
   }
+
+  /* ===== 英雄区图片轮播 ===== */
+  var heroSlides = document.querySelectorAll('.hero-slide');
+  var heroDots = document.querySelectorAll('.hero-dot');
+  var heroIndex = 0;
+  var heroTimer = null;
+
+  /* 切换轮播到第 i 张，并同步圆点状态 */
+  function showHeroSlide(i) {
+    for (var n = 0; n < heroSlides.length; n++) {
+      heroSlides[n].classList.toggle('active', n === i);
+      if (heroDots[n]) heroDots[n].classList.toggle('active', n === i);
+    }
+    heroIndex = i;
+  }
+
+  /* 停止自动轮播 */
+  function stopHeroAuto() {
+    if (heroTimer) {
+      window.clearInterval(heroTimer);
+      heroTimer = null;
+    }
+  }
+
+  /* 启动自动轮播（系统开启"减少动态效果"时不播放） */
+  function startHeroAuto() {
+    if (kReduceMotion) return;
+    stopHeroAuto();
+    heroTimer = window.setInterval(function () {
+      showHeroSlide((heroIndex + 1) % heroSlides.length);
+    }, 6000);
+  }
+
+  for (var hd = 0; hd < heroDots.length; hd++) {
+    heroDots[hd].addEventListener('click', function () {
+      showHeroSlide(parseInt(this.getAttribute('data-slide'), 10));
+      startHeroAuto();
+    });
+  }
+  var heroBox = document.querySelector('.hero');
+  heroBox.addEventListener('mouseenter', stopHeroAuto);
+  heroBox.addEventListener('mouseleave', startHeroAuto);
+
+  /* 首屏加载完成后再预取其余轮播图，避免拖慢首屏 */
+  window.addEventListener('load', function () {
+    for (var n = 0; n < heroSlides.length; n++) {
+      var bg = heroSlides[n].getAttribute('data-bg');
+      if (bg) heroSlides[n].style.backgroundImage = 'url("' + bg + '")';
+    }
+    startHeroAuto();
+  });
 
   /* ===== 登录弹窗 ===== */
   var modalMask = document.getElementById('login-modal');
@@ -620,6 +1034,105 @@
     if (e.key === 'Escape' && modalMask.classList.contains('open')) closeModal();
   });
 
+  /* ===== 服务详情数据（六位一体各模块） ===== */
+  var kServices = {
+    property: {
+      name: '物业服务', brief: '省心后勤 · 一站式社区服务', color: '#5CB85C', badge: 'bg-green-soft',
+      artTint: 'art-green', chips: ['30 分钟响应', '24 小时安保', '费用透明'],
+      art: '<svg viewBox="0 0 320 180" role="img" aria-label="物业服务插图"><line x1="24" y1="156" x2="296" y2="156" stroke="#5CB85C" stroke-opacity="0.25" stroke-width="3" stroke-linecap="round"/><path d="M96 88 L160 40 L224 88" fill="none" stroke="#5CB85C" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><rect x="112" y="88" width="96" height="68" rx="6" fill="#fff" stroke="#5CB85C" stroke-width="5"/><rect x="128" y="104" width="22" height="22" rx="3" fill="#5CB85C" class="art-blink"/><rect x="170" y="104" width="22" height="22" rx="3" fill="#5CB85C" class="art-blink" style="animation-delay:0.9s"/><rect x="148" y="128" width="24" height="28" rx="3" fill="#5CB85C" opacity="0.55"/><g transform="translate(258,58)"><g class="art-spin"><circle r="20" fill="none" stroke="#5CB85C" stroke-width="7" stroke-dasharray="10 9" stroke-linecap="round"/><circle r="7" fill="#5CB85C"/></g></g><circle cx="196" cy="34" r="6" fill="#5CB85C" opacity="0.45" class="art-float"/><circle cx="205" cy="22" r="4.5" fill="#5CB85C" opacity="0.32" class="art-float" style="animation-delay:0.6s"/><circle cx="212" cy="12" r="3.5" fill="#5CB85C" opacity="0.22" class="art-float" style="animation-delay:1.2s"/></svg>',
+      intro: '围绕居家场景提供保洁、维修、安保等一站式社区后勤服务，让长者住得省心、子女托付安心。',
+      items: ['社区保洁与定期环境巡检', '水电家电维修，30 分钟快速响应', '24 小时安保值守与门禁管理', '代收快递、代缴水电燃气费']
+    },
+    medical: {
+      name: '医疗对接', brief: '绿色通道 · 就医不排队', color: '#DA5B57', badge: 'bg-red-soft',
+      artTint: 'art-red', chips: ['绿色转诊', '家庭医生', '全程陪诊'],
+      art: '<svg viewBox="0 0 320 180" role="img" aria-label="医疗对接插图"><circle cx="160" cy="74" r="54" fill="#DA5B57" opacity="0.1" class="art-pulse"/><circle cx="160" cy="74" r="40" fill="#fff" stroke="#DA5B57" stroke-width="5"/><path d="M160 56 V92 M142 74 H178" stroke="#DA5B57" stroke-width="10" stroke-linecap="round"/><polyline points="24,146 96,146 112,114 130,162 148,146 296,146" fill="none" stroke="#DA5B57" stroke-opacity="0.22" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><polyline points="24,146 96,146 112,114 130,162 148,146 296,146" fill="none" stroke="#DA5B57" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" class="art-ecg"/><circle cx="66" cy="48" r="5" fill="#DA5B57" opacity="0.4" class="art-float" style="animation-delay:0.4s"/><circle cx="252" cy="44" r="6" fill="#DA5B57" opacity="0.32" class="art-float" style="animation-delay:1s"/></svg>',
+      intro: '与多家二级以上医院建立合作，打通挂号、转诊、陪诊全流程，为长者建立统一电子健康档案。',
+      items: ['合作医院优先挂号、绿色转诊', '家庭医生签约与定期随访', '就诊预约与全程陪诊服务', '电子健康档案云端同步']
+    },
+    nursing: {
+      name: '护理照护', brief: '照护到家 · 持证护理员上门', color: '#EC971F', badge: 'bg-orange-soft',
+      artTint: 'art-orange', chips: ['持证护理员', '上门服务', '康复指导'],
+      art: '<svg viewBox="0 0 320 180" role="img" aria-label="护理照护插图"><path d="M160 140 C116 108 94 86 94 63 C94 45 109 33 127 33 C141 33 152 41 160 52 C168 41 179 33 193 33 C211 33 226 45 226 63 C226 86 204 108 160 140 Z" fill="#EC971F" class="art-pulse"/><path d="M152 74 V92 M143 83 H161" stroke="#fff" stroke-width="7" stroke-linecap="round" opacity="0.9"/><path d="M84 58 V76 M75 67 H93" stroke="#EC971F" stroke-width="5" stroke-linecap="round" opacity="0.5" class="art-float"/><path d="M238 50 V68 M229 59 H247" stroke="#EC971F" stroke-width="5" stroke-linecap="round" opacity="0.4" class="art-float" style="animation-delay:0.7s"/><path d="M214 116 V130 M207 123 H221" stroke="#EC971F" stroke-width="5" stroke-linecap="round" opacity="0.35" class="art-float" style="animation-delay:1.3s"/></svg>',
+      intro: '持证护理员提供上门护理、康复训练与日间照料服务，覆盖术后康复与失能照护全场景。',
+      items: ['上门助浴、助餐、助洁服务', '康复训练与功能锻炼指导', '日间照料中心日间托管', '术后与失能长者专人照护']
+    },
+    insurance: {
+      name: '保险服务', brief: '理赔协助 · 保障更安心', color: '#5BC0DE', badge: 'bg-blue-soft',
+      artTint: 'art-blue', chips: ['方案对比', '投保代办', '理赔协助'],
+      art: '<svg viewBox="0 0 320 180" role="img" aria-label="保险服务插图"><circle cx="160" cy="88" r="66" fill="none" stroke="#5BC0DE" stroke-opacity="0.4" stroke-width="2.5" stroke-dasharray="5 11" class="art-ring"/><path d="M160 34 L212 52 V88 C212 116 189 137 160 148 C131 137 108 116 108 88 V52 Z" fill="#fff" stroke="#5BC0DE" stroke-width="5" stroke-linejoin="round"/><path d="M138 88 L154 104 L184 70" fill="none" stroke="#5BC0DE" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" class="art-draw"/><circle cx="78" cy="58" r="5" fill="#5BC0DE" opacity="0.4" class="art-float" style="animation-delay:0.5s"/><circle cx="242" cy="54" r="6" fill="#5BC0DE" opacity="0.32" class="art-float" style="animation-delay:1.1s"/></svg>',
+      intro: '为长者与家庭提供意外险、健康险的方案咨询、投保代办与理赔协助，保障方案每年免费检视。',
+      items: ['意外险、医疗险方案对比推荐', '投保流程代办，材料省心', '理赔材料整理与全程协助', '年度家庭保障方案检视']
+    },
+    advisor: {
+      name: '养老顾问', brief: '个性化定制 · 一对一规划', color: '#A80063', badge: 'bg-magenta-soft',
+      artTint: 'art-magenta', chips: ['一对一顾问', '机构考察', '政策解读'],
+      art: '<svg viewBox="0 0 320 180" role="img" aria-label="养老顾问插图"><circle cx="118" cy="64" r="22" fill="#A80063" class="art-float"/><path d="M76 148 C76 116 94 100 118 100 C142 100 160 116 160 148 Z" fill="#A80063" class="art-float"/><circle cx="196" cy="72" r="18" fill="none" stroke="#A80063" stroke-width="5" opacity="0.55" class="art-float" style="animation-delay:0.5s"/><path d="M162 148 C162 122 176 108 196 108 C216 108 230 122 230 148 Z" fill="#A80063" opacity="0.35" class="art-float" style="animation-delay:0.5s"/><rect x="204" y="26" width="80" height="42" rx="12" fill="#fff" stroke="#A80063" stroke-width="4"/><path d="M216 66 L210 80 L232 66 Z" fill="#fff"/><circle cx="226" cy="47" r="4" fill="#A80063" class="art-blink"/><circle cx="244" cy="47" r="4" fill="#A80063" class="art-blink" style="animation-delay:0.3s"/><circle cx="262" cy="47" r="4" fill="#A80063" class="art-blink" style="animation-delay:0.6s"/></svg>',
+      intro: '一对一养老规划顾问服务，从居家改造到机构选择，帮每个家庭找到最合适的养老方式。',
+      items: ['居家适老化改造评估建议', '养老机构实地考察陪同', '养老补贴与政策解读', '长期照护方案个性定制']
+    },
+    health: {
+      name: '健康管理', brief: '实时掌握 · 用数据守护健康', color: '#009981', badge: 'bg-teal-soft',
+      artTint: 'art-teal', chips: ['定期体检', '用药提醒', '紧急呼叫'],
+      art: '<svg viewBox="0 0 320 180" role="img" aria-label="健康管理插图"><rect x="36" y="28" width="248" height="124" rx="14" fill="#fff" stroke="#009981" stroke-opacity="0.3" stroke-width="3"/><polyline points="56,98 92,98 106,70 122,122 138,98 176,98 190,78 204,112 218,98 264,98" fill="none" stroke="#009981" stroke-opacity="0.22" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><polyline points="56,98 92,98 106,70 122,122 138,98 176,98 190,78 204,112 218,98 264,98" fill="none" stroke="#009981" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" class="art-ecg"/><path d="M220 66 C210 58 206 53 206 48 C206 44 209 41 213 41 C216 41 219 43 220 45 C221 43 224 41 227 41 C231 41 234 44 234 48 C234 53 230 58 220 66 Z" fill="#009981" opacity="0.45" class="art-pulse" style="animation-delay:0.3s"/><circle cx="66" cy="130" r="4" fill="#009981" opacity="0.3" class="art-float" style="animation-delay:0.2s"/><circle cx="80" cy="130" r="4" fill="#009981" opacity="0.3" class="art-float" style="animation-delay:0.5s"/><circle cx="94" cy="130" r="4" fill="#009981" opacity="0.3" class="art-float" style="animation-delay:0.8s"/></svg>',
+      intro: '定期体检、用药提醒与紧急呼叫联动，让长者身体状况随时看得见、管得住。',
+      items: ['定期体检与报告解读', '用药提醒与健康随访', '紧急呼叫一键联动家属', '智能设备健康数据监测']
+    }
+  };
+
+  /* 将当前服务数据渲染进详情视图（插图 / 简介 / 标签 / 服务清单） */
+  function renderService(key) {
+    var s = kServices[key];
+    document.getElementById('service-title').textContent = s.name;
+    document.getElementById('service-subtitle').textContent = s.brief;
+    document.getElementById('service-intro').textContent = s.intro;
+    var artBox = document.getElementById('service-art');
+    artBox.className = 'service-art ' + s.artTint;
+    artBox.innerHTML = s.art;
+    var chips = document.getElementById('service-chips');
+    chips.innerHTML = '';
+    for (var c = 0; c < s.chips.length; c++) {
+      var chip = document.createElement('span');
+      chip.className = 'service-chip ' + s.badge;
+      chip.style.color = s.color;
+      chip.textContent = s.chips[c];
+      chips.appendChild(chip);
+    }
+    var list = document.getElementById('service-items');
+    list.innerHTML = '';
+    for (var i = 0; i < s.items.length; i++) {
+      var li = document.createElement('li');
+      li.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="' + s.color + '" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 12.5 L10 18 L19.5 6.5"/></svg>';
+      var span = document.createElement('span');
+      span.textContent = s.items[i];
+      li.appendChild(span);
+      list.appendChild(li);
+    }
+  }
+
+  /* ===== 六位一体展开面板（端到端服务） ===== */
+  var sixFeature = document.getElementById('feature-six');
+  var sixPanel = document.getElementById('six-panel');
+  var sixHint = document.getElementById('six-hint');
+
+  /* 展开/收起面板；动画高度取元素实际内容高度，适配窄屏换行 */
+  function toggleSixPanel() {
+    var open = sixPanel.classList.toggle('open');
+    sixFeature.setAttribute('aria-expanded', open ? 'true' : 'false');
+    sixHint.textContent = open ? '收起 ▴' : '点击展开六位一体 ▾';
+    sixPanel.style.maxHeight = open ? sixPanel.scrollHeight + 'px' : '';
+    if (open) {
+      window.setTimeout(function () { sixPanel.scrollIntoView({ block: 'nearest' }); }, 330);
+    }
+  }
+  sixFeature.addEventListener('click', toggleSixPanel);
+  sixFeature.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleSixPanel(); }
+  });
+  window.addEventListener('resize', function () {
+    if (sixPanel.classList.contains('open')) sixPanel.style.maxHeight = sixPanel.scrollHeight + 'px';
+  });
+
   /* 演示表单：校验必填项非空，给出提示（纯前端，无后端） */
   function bindDemoForm(formId, msgId, okText, requiredIds) {
     var form = document.getElementById(formId);
@@ -647,10 +1160,10 @@
   }, { passive: true });
 
   /* ===== hash 路由：支持刷新、直链与浏览器前进后退 ===== */
-  window.addEventListener('hashchange', function () { switchTo(viewNameFromHash()); });
+  window.addEventListener('hashchange', function () { switchTo(routeFromHash()); });
 
-  var initial = viewNameFromHash();
-  if (initial !== 'home') {
+  var initial = routeFromHash();
+  if (initial.view !== 'home') {
     applyView(initial);
   } else {
     markActiveNav('home');
